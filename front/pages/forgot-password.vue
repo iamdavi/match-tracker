@@ -1,63 +1,44 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-      <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Reset your password
-        </h2>
-        <p class="mt-2 text-center text-sm text-gray-600">
-          Enter your email address and we'll send you a link to reset your password.
-        </p>
-      </div>
-      
-      <UCard>
-        <UForm :state="formState" @submit="handleForgotPassword">
-          <UFormGroup label="Email" name="email">
-            <UInput
-              v-model="formState.email"
-              type="email"
-              placeholder="Enter your email"
-              required
-            />
-          </UFormGroup>
-          
-          <UButton
-            type="submit"
-            :loading="loading"
-            :disabled="loading"
-            class="w-full"
-          >
-            Send reset link
-          </UButton>
-        </UForm>
-      </UCard>
-      
-      <div class="text-center">
-        <NuxtLink
-          to="/login"
-          class="font-medium text-primary-600 hover:text-primary-500"
-        >
-          Back to sign in
-        </NuxtLink>
-      </div>
-      
-      <UAlert
-        v-if="error"
-        color="red"
-        variant="soft"
-        :title="error"
-        class="mt-4"
-      />
-      
-      <UAlert
-        v-if="success"
-        color="green"
-        variant="soft"
-        :title="success"
-        class="mt-4"
-      />
-    </div>
-  </div>
+  <v-container fluid class="fill-height">
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="4">
+        <v-card class="elevation-12">
+          <v-toolbar color="primary" dark flat>
+            <v-toolbar-title>Reset your password</v-toolbar-title>
+          </v-toolbar>
+
+          <v-card-text>
+            <p class="text-center text-body-2 mb-4">
+              Enter your email address and we'll send you a link to reset your password.
+            </p>
+
+            <v-form @submit.prevent="handleForgotPassword">
+              <v-text-field v-model="formState.email" label="Email" name="email" prepend-icon="mdi-email" type="email"
+                variant="outlined" required />
+
+              <v-btn type="submit" color="primary" block :loading="loading" :disabled="loading" size="large">
+                Send reset link
+              </v-btn>
+            </v-form>
+
+            <div class="text-center mt-4">
+              <NuxtLink to="/login" class="text-decoration-none">
+                Back to sign in
+              </NuxtLink>
+            </div>
+          </v-card-text>
+        </v-card>
+
+        <v-alert v-if="error" type="error" variant="tonal" class="mt-4">
+          {{ error }}
+        </v-alert>
+
+        <v-alert v-if="success" type="success" variant="tonal" class="mt-4">
+          {{ success }}
+        </v-alert>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup lang="ts">
@@ -79,15 +60,15 @@ const handleForgotPassword = async () => {
   loading.value = true
   error.value = ''
   success.value = ''
-  
+
   try {
     const result = await authStore.forgotPassword(formState.value.email)
-    
-    if (result.success) {
+
+    if (result?.success) {
       success.value = result.message || 'Reset link sent successfully!'
       formState.value.email = ''
     } else {
-      error.value = result.error || 'Failed to send reset link'
+      error.value = result?.error || 'Failed to send reset link'
     }
   } catch {
     error.value = 'An unexpected error occurred'
@@ -95,4 +76,4 @@ const handleForgotPassword = async () => {
     loading.value = false
   }
 }
-</script> 
+</script>

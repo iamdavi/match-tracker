@@ -10,9 +10,23 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/image',
     '@nuxt/scripts',
-    '@nuxt/ui',
     '@pinia/nuxt'
   ],
+
+  css: [
+    '@mdi/font/css/materialdesignicons.css',
+    'vuetify/styles'
+  ],
+
+  build: {
+    transpile: ['vuetify']
+  },
+
+  vite: {
+    define: {
+      'process.env.DEBUG': false,
+    },
+  },
 
   runtimeConfig: {
     public: {
